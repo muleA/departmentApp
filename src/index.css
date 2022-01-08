@@ -1,0 +1,10 @@
+@import 'antd/dist/antd.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    h2 {
+        @apply text-xl font-bold m-5;
+      }
+}
