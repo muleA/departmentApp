@@ -1,9 +1,6 @@
-import { Button, Form, Input, Modal, notification, TreeSelect } from 'antd';
-import react, { useEffect, useState } from 'react'
-import reactDOM from 'react-dom'
-import { useDispatch, useSelector } from 'react-redux';
+import {  Modal, TreeSelect } from 'antd';
+import {  useSelector } from 'react-redux';
 import Department from '../model/department'
-import {  updateDepartment } from '../Redux/reducer/department.reducer';
 import { RootState } from '../store';
 
 
@@ -11,17 +8,7 @@ export default function DepartmentDetails(props:{visibility:boolean;
 visibilityToggler:(visible:boolean)=>void; selectedDepartment?:Department})
 {
     const departments = useSelector((state: RootState) => state.departments);
-    const dispatch = useDispatch();
-    const[isDetailsModalVisible,setIsDetailsModalVisible]=useState<boolean>(false);
-    const [ItemTobeViewed,setItemTobeViewed]=useState<Department| null>(null);
-
     /* event handler */
-    const showModal = () => {
-      setIsDetailsModalVisible(true);
-      console.log(setIsDetailsModalVisible);
-      props.visibilityToggler(true);
-    
-    };
     const handleOk = () => {
       props.visibilityToggler(false);
     };
@@ -39,15 +26,18 @@ visibilityToggler:(visible:boolean)=>void; selectedDepartment?:Department})
         
             while(parent!=null){
                 if(parent.id === ancestorId){
-                    return true;
-                }
-                parent = departments.find((department:Department)=>{return department.id===parent!.parentDepartmentId})
-            }                 
+                    return true;       
+
+                } 
+                
+          parent = departments.find((department:Department)=>{return department.id===parent!.parentDepartmentId})
+
+            }  
+
             return false;
         });
 
         return descendents;
-        console.log(descendents)
     }
 
     const managedDepartments: Department[] | undefined=getDescendents(props.selectedDepartment!.id);
@@ -56,8 +46,8 @@ visibilityToggler:(visible:boolean)=>void; selectedDepartment?:Department})
         selectable:false}}):[];  
       return (
         <Modal
-          title={"Department Under its  Department"}
-          width={720}
+          title={"Department Under Your  Department"}
+          width={500}
           onCancel={handleCancel}
           onOk={handleOk}
           visible={props.visibility}
@@ -65,7 +55,7 @@ visibilityToggler:(visible:boolean)=>void; selectedDepartment?:Department})
         >
             <>
                 <b>Departments under your management: </b> 
-                {(managedDepartmentsTreeData.length==0)? " None":
+                {(managedDepartmentsTreeData.length===0)? " none":
                     <TreeSelect
                         className="w-1/2"
                         treeData={managedDepartmentsTreeData}

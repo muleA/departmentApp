@@ -10,6 +10,7 @@ import { RootState } from "../store";
 import Department from "../model/department";
 import { deleteDepartment } from "../Redux/reducer/department.reducer";
 import {  useState } from "react";
+
 export default function DeleteDepartment(props: {
 modalVisibility: boolean; selectedDepartment?:Department; 
 visibilityToggler: (visible: boolean) => void;
@@ -19,40 +20,35 @@ visibilityToggler: (visible: boolean) => void;
     const departments: Department[] = useSelector((state:RootState)=>state.departments);
     const dispatch = useDispatch();
     const [form] = Form.useForm();
-    const data:Department[] = departments;
-    const [selectedDepartment,setSelectedDepartment] = useState<Department | undefined>(undefined);
     
-    
-const getDescendents:(ancestorId:string)=>Department[] = (ancestorId)=>{
+    /*  */
 
-    let descendents = departments.filter((item)=>{
-  
-    
+    const getDescendents:(ancestorId:string)=>Department[] = (ancestorId)=>{
 
-        let parent:Department | undefined = departments.find((department:Department)=>
-        {return department.id===item.parentDepartmentId});
-    
-        while(parent!=null){
-          
-            if(parent.id === ancestorId){
-                return true;
-            }
-            parent = departments.find((department:Department)=>{return department.id===parent!.parentDepartmentId})
-        }   
-                    
-        return false;
-    });
+      let descendents = departments.filter((item)=>{
 
-    return descendents;
+          var parent:Department | undefined = departments.find((department:Department)=>{return department.id===item.parentDepartmentId});
+      
+          while(parent!=null){
+              if(parent.id === ancestorId){
+                  return true;
+              }
+              parent = departments.find((department:Department)=>{return department.id===parent!.parentDepartmentId})
+          }                 
+          return false;
+      });
+
+      return descendents;
   }
+
+    /*  */
   
     const handleCancel = () => {
         props.visibilityToggler(false);
       };
-      const handleOk = () => {
-
+    /*   const handleOk = () => {
         props.visibilityToggler(false);
-      };
+      }; */
 
       const ConfirmDelete: (department:Department)=>void = (department) =>{
         setDeleteLoading(true);
@@ -94,9 +90,9 @@ const getDescendents:(ancestorId:string)=>Department[] = (ancestorId)=>{
     Ok
   </Button>]}
   >
- <h1 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">   <QuestionCircleOutlined style={{ fontSize: '16px', color: '#08c' }}/>  Are You Sure to Delete <span style={{color:"red"}}>  {props.selectedDepartment?.name} </span> 
+ <h1 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">   
+ <QuestionCircleOutlined style={{ fontSize: '60px', color: 'red' }}/>  Are You Sure to Delete <span style={{color:"red"}}>  {props.selectedDepartment?.name} </span> 
   Department?</h1>
-  
 </Modal>
 )};
 

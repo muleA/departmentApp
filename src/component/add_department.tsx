@@ -1,23 +1,27 @@
-import {
-  Form,
-  Input,
-  Button,
-  Modal,
-  TreeSelect,
-  notification,
-} from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
+
+import { Form, Input, Button, Modal, TreeSelect, notification } from "antd";
+import { useDispatch, useSelector } from "react-redux";     //redux dispatcher
+import { RootState } from "../store";  
 import Department from "../model/department";
 import { createDepartment } from "../Redux/reducer/department.reducer";
-import {  useState } from "react";
+import { useState } from "react";
 
+/*   function to  register department */
 export default function AddDepartmentForm(props: {
   modalVisibility: boolean;
   visibilityToggler: (visible: boolean) => void;
 }) {
   const departments = useSelector((state: RootState) => state.departments);
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
+
+  const handleOk = () => {
+    props.visibilityToggler(false);
+  };
+  const handleCancel = () => {
+    props.visibilityToggler(false);
+  };
   const treeData = departments.map((department: Department) => {
     return {
       id: department.id,
@@ -26,17 +30,14 @@ export default function AddDepartmentForm(props: {
       value: department.id,
     };
   });
-  const [form] = Form.useForm();
-  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState(props.modalVisibility);
   
+
   const onFinish: (value: {
     id?: string;
     name: string;
     description: string;
     parentDepartmentId?: string;
   }) => void = (value) => {
-
     setSubmitLoading(true);
     const asyncDispatcher = async () => await dispatch(createDepartment(value));
     asyncDispatcher()
@@ -59,25 +60,14 @@ export default function AddDepartmentForm(props: {
         setSubmitLoading(false);
       });
   };
-
-  
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-  const handleOk = () => {
-    props.visibilityToggler(false);
-  };
-  const handleCancel = () => {
-    props.visibilityToggler(false);
-  };
   return (
     <Modal
       title={"Register new department"}
-      width={720}
+      width={700}
       onCancel={handleCancel}
       onOk={handleOk}
       visible={props.modalVisibility}
-      bodyStyle={{ paddingBottom: 80 }}
+      bodyStyle={{ paddingBottom: 20 }}
     >
       <Form
         onFinish={onFinish}
@@ -87,8 +77,6 @@ export default function AddDepartmentForm(props: {
         labelCol={{ span: 6 }}
         wrapperCol={{ offset: 1 }}
       >
-   
-
         <Form.Item
           label="Department name"
           name="name"
@@ -128,11 +116,9 @@ export default function AddDepartmentForm(props: {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 10 }}>
-          
-            <Button type="primary" htmlType="submit" loading={submitLoading}>
-              Submit
-            </Button>
-          
+          <Button type="primary" htmlType="submit" loading={submitLoading}>
+            Submit
+          </Button>
         </Form.Item>
       </Form>
     </Modal>
