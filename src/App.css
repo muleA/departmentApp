@@ -1,3 +1,38 @@
+.ant-select {
+ width: 100%;
+}
+.ant-layout-header {
+  height: 64px;
+  padding: 0px;
+  color: whitesmoke;
+  line-height: 64px;
+  background: #0626da;
+}
+
+.ant-layout-header .ant-menu {
+  line-height: inherit;
+  background: #1114cc;
+padding:0,50px}
+
+  .ant-menu-horizontal > .ant-menu-item-selected a {
+    color: whitesmoke;
+    font-size: large;
+    font-weight: 900;
+}
+.ant-menu-horizontal > .ant-menu-item a:hover {
+  color: whitesmoke;
+
+}
+
+.ant-layout-content {
+  flex: auto;
+  min-height: 80vh;
+}
+.ant-layout-footer {
+  padding: 24px 50px;
+  font-size: 14px;
+  background: #2d2d2e;
+}
 .App {
   text-align: center;
 }
@@ -36,3 +71,10 @@
     transform: rotate(360deg);
   }
 }
+ .ant-modal-content{
+   border-radius: 25px;
+   
+ }
+ .ant-modal-header{
+   border-radius: 25px;
+ }
