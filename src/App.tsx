@@ -1,9 +1,9 @@
-import './App.css'
+import './Styles/App.css'
 import { Layout, Menu } from 'antd'
 import { Routes, Route, Link, Outlet, useLocation } from 'react-router-dom'
-import Home from './Pages/home'
-import Departments from './Pages/departments'
-import { NotFound } from './Pages/page_not_found'
+import Home from './Features/Department/Pages/home'
+import Departments from './Features/Department/Pages/departments'
+import { NotFound } from './Features/Department/Pages/page_not_found'
 const { Header, Content, Footer } = Layout
 export default function App() {
   const location = useLocation()
@@ -23,7 +23,7 @@ export default function App() {
         <Content style={{ padding: '0 50px' }}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/departments" element={<Departments />} />
+            <Route path="/departments" element={<Departments/>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Outlet />

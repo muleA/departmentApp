@@ -1,14 +1,17 @@
-import Department from '../../model/department'
-
+import Department from '../../../../model/department'
+/* initialize action type */
 export enum actionType {
   addDepartment = 'ADD_DEPARTMENT',
   deleteDepartment = 'DELETE_DEPARTMENT',
   updateDepartment = 'UPDATE_DEPARTMENT',
 }
 
+
+/* define action types */
+
 interface actionAddDepartment {
   type: actionType.addDepartment
-  payload: Department | Department[]
+  payload: Department 
 }
 
 interface actionDeleteDepartment {
@@ -22,9 +25,12 @@ interface actionUpdateDepartment {
 }
 
 export type Action = actionAddDepartment | actionUpdateDepartment | actionDeleteDepartment
+/* //// */
 
-export function addDepartment(payload: Department | Department[]) {
+/*  action  creator functions */
+export function addDepartment(payload: Department ) {
   return { type: actionType.addDepartment, payload: payload }
+ 
 }
 
 export function removeDepartment(payload: Department[]) {

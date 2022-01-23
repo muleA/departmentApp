@@ -1,10 +1,10 @@
 /* eslint-disable no-loop-func */
-import { Button, Modal, TreeSelect } from 'antd'
-import { useSelector } from 'react-redux'
-import Department from '../model/department'
-import { RootState } from '../store'
 
-export default function DepartmentDetails(props: {
+import { Button, Modal, Tree } from 'antd'
+import { useSelector } from 'react-redux'
+import Department from '../../../model/department'
+import { RootState } from '../../../store'
+export default function DepartmentUnderManagement(props: {
   visibility: boolean
   visibilityToggler: (visible: boolean) => void
   selectedDepartment?: Department
@@ -17,14 +17,35 @@ export default function DepartmentDetails(props: {
   const handleCancel = () => {
     props.visibilityToggler(false)
   }
-  /* event handler finished */
+  /*/////////*/
+   
+  const reformattedNodes: { id:string; key: string; title: string; parent_id: string | undefined }[] 
+  = departments.map((element: Department) => {
+    return { id:element.id, key: element.id, title: element.name, parent_id: element.parentDepartmentId }
+});
 
-  const getDescendents: (ancestorId: string) => Department[] = (ancestorId) => {
+function makeTree(nodes: any, parentId: string) {
+    return nodes
+        .filter((node: any) => node.parent_id === parentId)
+        .reduce(
+            (tree: any, node: any) => [
+                ...tree,
+                {
+                    ...node,
+                    children: makeTree(nodes, node.id),
+                },
+            ],
+            [],
+        )
+}
+
+
+  /*/////////*/
+  const getDescendents = (ancestorId: string): Department[] => {
     let descendents = departments.filter((item) => {
       let parent: Department | undefined = departments.find((department: Department) => {
         return department.id === item.parentDepartmentId
       })
-
       while (parent != null) {
         if (parent.id === ancestorId) {
           return true
@@ -37,9 +58,9 @@ export default function DepartmentDetails(props: {
 
       return false
     })
-
     return descendents
-  }
+   
+  } 
 
   const managedDepartments: Department[] | undefined = getDescendents(props.selectedDepartment!.id)
   const managedDepartmentsTreeData = managedDepartments
@@ -49,13 +70,13 @@ export default function DepartmentDetails(props: {
           pId: department.parentDepartmentId,
           title: department.name,
           value: department.id,
-          selectable: false,
         }
       })
     : []
+  /*  */
   return (
     <Modal
-      title={'Department Under Your  Department'}
+      title={'List of Departments Under  ' + props.selectedDepartment?.name}
       width={500}
       visible={props.visibility}
       closable={false}
@@ -81,14 +102,11 @@ export default function DepartmentDetails(props: {
         {managedDepartmentsTreeData.length === 0 ? (
           ' none'
         ) : (
-          <TreeSelect
-            className="w"
-            treeData={managedDepartmentsTreeData}
-            placeholder="Click to view departments"
-            treeDataSimpleMode
-          />
+          <Tree className="w"  treeData={makeTree(reformattedNodes,props.selectedDepartment!.id)} />
         )}
       </>
     </Modal>
   )
 }
+
+

@@ -1,4 +1,4 @@
-import Department from '../../model/department'
+import Department from '../../../../model/department'
 import { Dispatch } from 'redux'
 import {
   actionType,
@@ -7,15 +7,16 @@ import {
   removeDepartment,
   editDepartment,
 } from '../Actions/department.action'
-import { api } from '../../Service/api'
+import { api } from '../../API/api'
 
-const initialState: { departments: Department[] } = { departments: [] }
+const initialState: { departments: Department[] } = { departments: []}
 
 export default function departmentReducer(state = initialState, action: Action) {
   switch (action.type) {
     case actionType.addDepartment:
-      if (Array.isArray(action.payload)) {
+      if (Array.isArray(action.payload)) { 
         return { ...state, departments: action.payload }
+       
       }
       return { ...state, departments: state.departments.concat(action.payload) }
 
@@ -33,7 +34,7 @@ export default function departmentReducer(state = initialState, action: Action) 
     case actionType.deleteDepartment:
       return {
         ...state,
-        departments: state.departments.filter((department) => {
+        departments:state.departments.filter((department) => {
           return !action.payload.find((dept) => dept.id === department.id)
         }),
       }
@@ -53,11 +54,7 @@ export async function getDepartment(dispatch: Dispatch<any>) {
   }
 }
 
-export function createDepartment(info: {
-  name: string
-  description: string
-  parentDepartmentId?: string
-}) {
+export function createDepartment(info: Department) {
   return async (dispatch: Dispatch<any>) => {
     try {
       const response = await api.createDepartment(info)
@@ -80,7 +77,7 @@ export function updateDepartment(department: Department) {
   }
 }
 
-export function deleteDepartment(department: Department, descendents: Department[]) {
+export function deleteDepartment(department:Department, descendents: Department[]) {
   return async (dispatch: Dispatch<any>) => {
     try {
       await api.deleteDepartment(department.id)
