@@ -1,5 +1,3 @@
-/* eslint-disable no-loop-func */
-
 import { Button, Modal, Tree } from 'antd'
 import { useSelector } from 'react-redux'
 import Department from '../../../model/department'
@@ -18,27 +16,36 @@ export default function DepartmentUnderManagement(props: {
     props.visibilityToggler(false)
   }
   /*/////////*/
-   
-  const reformattedNodes: { id:string; key: string; title: string; parent_id: string | undefined }[] 
-  = departments.map((element: Department) => {
-    return { id:element.id, key: element.id, title: element.name, parent_id: element.parentDepartmentId }
-});
 
-function makeTree(nodes: any, parentId: string) {
+  const reformattedNodes: {
+    id: string
+    key: string
+    title: string
+    parent_id: string | undefined
+  }[] = departments.map((element: Department) => {
+    return {
+      id: element.id,
+      key: element.id,
+      title: element.name,
+      parent_id: element.parentDepartmentId,
+    }
+  })
+
+  function makeTree(nodes: any, parentId: string) {
     return nodes
-        .filter((node: any) => node.parent_id === parentId)
-        .reduce(
-            (tree: any, node: any) => [
-                ...tree,
-                {
-                    ...node,
-                    children: makeTree(nodes, node.id),
-                },
-            ],
-            [],
-        )
-}
-
+      .filter((node: any) => node.parent_id === parentId)
+      .reduce(
+        (tree: any, node: any) => [
+         ...tree,
+         
+          { 
+            ...node,
+            children: makeTree(nodes, node.id),
+          },
+        ],
+        []
+      )
+  }
 
   /*/////////*/
   const getDescendents = (ancestorId: string): Department[] => {
@@ -51,6 +58,7 @@ function makeTree(nodes: any, parentId: string) {
           return true
         }
 
+        // eslint-disable-next-line no-loop-func
         parent = departments.find((department: Department) => {
           return department.id === parent!.parentDepartmentId
         })
@@ -59,8 +67,7 @@ function makeTree(nodes: any, parentId: string) {
       return false
     })
     return descendents
-   
-  } 
+  }
 
   const managedDepartments: Department[] | undefined = getDescendents(props.selectedDepartment!.id)
   const managedDepartmentsTreeData = managedDepartments
@@ -102,11 +109,9 @@ function makeTree(nodes: any, parentId: string) {
         {managedDepartmentsTreeData.length === 0 ? (
           ' none'
         ) : (
-          <Tree className="w"  treeData={makeTree(reformattedNodes,props.selectedDepartment!.id)} />
+          <Tree className="w" treeData={makeTree(reformattedNodes, props.selectedDepartment!.id)} />
         )}
       </>
     </Modal>
   )
 }
-
-

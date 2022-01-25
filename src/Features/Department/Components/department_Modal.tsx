@@ -1,4 +1,3 @@
-
 import { Form, Input, Button, Modal, TreeSelect, notification } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store'
@@ -9,12 +8,12 @@ import { useEffect, useState } from 'react'
 export default function DepartmentModal(props: {
   formType: 'new' | 'update'
   visibility: boolean
-  visibilityToggler: (visible:boolean) => void
+  visibilityToggler: (visible: boolean) => void
   selectedDepartment?: Department
 }) {
   const departments = useSelector((state: RootState) => state.departments)
-  const dispatch = useDispatch() 
-   const [form] = Form.useForm()
+  const dispatch = useDispatch()
+  const [form] = Form.useForm()
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const treeData = departments.map((department: Department) => {
     return {
@@ -28,7 +27,7 @@ export default function DepartmentModal(props: {
   //All event handlers goes below
 
   const handleOk = () => {
-    props.visibilityToggler(false);
+    props.visibilityToggler(false)
   }
   const handleCancel = () => {
     props.visibilityToggler(false)
@@ -79,7 +78,6 @@ export default function DepartmentModal(props: {
   }
 
   //end of event handlers
-
   useEffect(() => {
     if (props.formType === 'update' && props.selectedDepartment != null) {
       form.setFieldsValue({
@@ -173,17 +171,26 @@ export default function DepartmentModal(props: {
 
         <Form.Item wrapperCol={{ offset: 10 }}>
           {props.formType === 'new' && (
-            <Button type="primary" className='text-white bg-blue-600 hover:bg-blue-800  
-            font-medium rounded-lg text-sm ' htmlType="submit" loading={submitLoading}>
+            <Button
+              type="primary"
+              className="text-white bg-blue-600 hover:bg-blue-800  
+            font-medium rounded-lg text-sm "
+              htmlType="submit"
+              loading={submitLoading}
+            >
               Submit
             </Button>
           )}
 
           {props.formType === 'update' && (
             <>
-              <Button className="mr-10 text-white bg-blue-700 hover:bg-blue-600  
-  font-medium rounded-lg text-sm " type="primary" 
-              htmlType="submit" loading={submitLoading}>
+              <Button
+                className="mr-10 text-white bg-blue-700 hover:bg-blue-600  
+  font-medium rounded-lg text-sm "
+                type="primary"
+                htmlType="submit"
+                loading={submitLoading}
+              >
                 Update
               </Button>
             </>

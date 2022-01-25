@@ -11,7 +11,7 @@ export enum actionType {
 
 interface actionAddDepartment {
   type: actionType.addDepartment
-  payload: Department 
+  payload: Department |Department[]
 }
 
 interface actionDeleteDepartment {

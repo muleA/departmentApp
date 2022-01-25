@@ -8,7 +8,6 @@ const apiEndPoints = {
   deleteDepartment: Department_API_BASE_URL + '/delete-department/',
   getDepartments: Department_API_BASE_URL + '/get-departments/',
 }
-
 export const api = {
   createDepartment:(department:Department)=> {
     return axios.post(apiEndPoints.createDepartment, department)

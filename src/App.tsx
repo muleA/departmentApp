@@ -6,7 +6,7 @@ import Departments from './Features/Department/Pages/departments'
 import { NotFound } from './Features/Department/Pages/page_not_found'
 const { Header, Content, Footer } = Layout
 export default function App() {
-  const location = useLocation()
+  const location = useLocation()  //used to find the location of navigation
   return (
     <>
       <Layout className="layout">

@@ -1,5 +1,4 @@
 /* eslint-disable no-loop-func */
-
 import { Button, notification, Spin, Table, Space, Card, Modal, Form } from 'antd'
 import { PlusCircleFilled, DeleteFilled, EditFilled, EyeFilled } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,21 +9,20 @@ import { RootState } from '../../../store'
 import DepartmentModal from '../Components/department_Modal'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import DepartmentUnderManagement from '../Components/department_Under_management'
-
 export default function Departments() {
-  const departments: Department[] = useSelector((state: RootState) => state.departments)
-  const dispatch = useDispatch()  
+  const departments: Department[] = useSelector((state: RootState) => state.departments)  // extract data from the Redux store state,
+  const dispatch = useDispatch()    // used to dispatch action
   const [form] = Form.useForm() 
-  const [selectedDepartment, setSelectedDepartment] = useState<Department | undefined>(undefined)  
   const [formType, setFormType] = useState<'new' | 'update' | null>(null)
   const data: Department[] = departments
-  const [loadingData, setLoadingData] = useState(true)
+  const [selectedDepartment, setSelectedDepartment] = useState<Department | undefined>(undefined)
+  const [fetchDataLoading, setFetchDataLoading] = useState(true)
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [isCreate_UpdateModalVisible, setIsCreate_UpdateModalVisible] = useState(false)
   const [isDeleteModalVisible, setIsdeleteModalVisible] = useState(false)
-  const [isDepartment_Under_ManagementModalVisble, setisDepartment_Under_ManagementModalVisble] = useState(false)
-  
-  const getDescendents= (ancestorId: string):Department[]=> {
+  const [isDepartment_Under_ManagementModalVisble,setisDepartment_Under_ManagementModalVisble] = useState(false)
+
+  const getDescendents = (ancestorId: string): Department[] => {
     let descendents = departments.filter((item) => {
       let parent: Department | undefined = departments.find((department: Department) => {
         return department.id === item.parentDepartmentId
@@ -34,6 +32,7 @@ export default function Departments() {
         if (parent.id === ancestorId) {
           return true
         }
+
         parent = departments.find((department: Department) => {
           return department.id === parent!.parentDepartmentId
         })
@@ -48,16 +47,9 @@ export default function Departments() {
   const showDepartmentFormModal = () => {
     setIsCreate_UpdateModalVisible(!isCreate_UpdateModalVisible)
   }
-  const showDeleteModal = (id: string) => {
-    setIsdeleteModalVisible(true)
-    setSelectedDepartment(
-      departments.find((department) => {
-        return department.id === id
-      })
-    )
-    setIsdeleteModalVisible(!isDeleteModalVisible)
+  const showDepartmentUnderManagementModal = () => {
+    setisDepartment_Under_ManagementModalVisble(!isDepartment_Under_ManagementModalVisble)
   }
-
   const handleDeleteOk = () => {
     setIsdeleteModalVisible(false)
   }
@@ -65,9 +57,7 @@ export default function Departments() {
   const handleDeleteCancel = () => {
     setIsdeleteModalVisible(false)
   }
-  const showDepartmentUnderYourManagementModal = () => {
-    setisDepartment_Under_ManagementModalVisble(!isDepartment_Under_ManagementModalVisble)
-  }
+
   const onNewDepartment = () => {
     setFormType('new')
     setIsCreate_UpdateModalVisible(!isCreate_UpdateModalVisible)
@@ -81,17 +71,25 @@ export default function Departments() {
     )
     showDepartmentFormModal()
   }
-
+  const showDeleteModal = (id: string) => {
+    setIsdeleteModalVisible(true)
+    setSelectedDepartment(
+      departments.find((department) => {
+        return department.id === id
+      })
+    )
+    setIsdeleteModalVisible(!isDeleteModalVisible)
+  }
   const onDepartmentUnderManagement = (id: string) => {
     setSelectedDepartment(
       departments.find((department) => {
         return department.id === id
       })
     )
-    showDepartmentUnderYourManagementModal()
+    showDepartmentUnderManagementModal()
   }
 
-  const ConfirmDelete=(department: Department):void => {
+  const ConfirmDelete = (department: Department): void => {
     setDeleteLoading(true)
     const asyncDispatcher = async () => {
       await dispatch(deleteDepartment(department, getDescendents(department.id)))
@@ -107,9 +105,7 @@ export default function Departments() {
 
         setDeleteLoading(false)
         form.resetFields()
-        setIsdeleteModalVisible(false);
-
-       
+        setIsdeleteModalVisible(false)
       })
       .catch((err) => {
         notification.error({
@@ -120,44 +116,43 @@ export default function Departments() {
         setDeleteLoading(false)
       })
   }
-/* //// */
-  /* retrieve data from the api source using useEffect hooks */
+  /* //// */
+  //data fetching
   useEffect(() => {
     const asyncDispatcher = async () => {
       return await dispatch(getDepartment)
     }
     asyncDispatcher()
-      .then(() => setLoadingData(false))
+      .then(() => setFetchDataLoading(false))
       .catch((err) => {
         notification.error({
           message: `Failed to retrieve departments`,
           description: err + '.',
           placement: 'bottomRight',
         })
-        setLoadingData(false)
+        setFetchDataLoading(false)
       })
   }, [dispatch])
 
-  /* //// */
-
+  /* ant design table  */
   const columns = [
     {
-      title: 'Department id',
+      title: 'Department Id',
       dataIndex: 'id',
       key: 'id',
     },
     {
-      title: 'Department name',
+      title: 'Department Name',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Department description',
+      title: 'Department Description',
       dataIndex: 'description',
       key: 'description',
     },
     {
-      title: 'Managing department',
+      title: 'Managing Department',
       key: 'parentDepartmentId',
       dataIndex: 'parentDepartmentId',
       render: (parentDepartmentId: string) => {
@@ -176,7 +171,7 @@ export default function Departments() {
           <Button
             name="details"
             type="primary"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold   rounded-full 
+            className=" bg-blue-800 hover:bg-blue-900 text-white font-bold   rounded-full 
             flex items-center"
             onClick={() => {
               onDepartmentUnderManagement(record.id)
@@ -186,9 +181,9 @@ export default function Departments() {
             View
           </Button>
           <Button
-            type="primary"
+          type="primary"
             name="update"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold  rounded-full flex items-center"
+            className="bg-blue-600 hover:bg-blue-400 text-whiteSmoke font-bold  rounded-full flex items-center"
             onClick={() => {
               onUpdateDepartment(record.id)
             }}
@@ -198,10 +193,10 @@ export default function Departments() {
           </Button>
           <Button
             type="primary"
-            className="text-white font-bold  rounded-full flex items-center"
+            className="text-white font-bold  bg-red-600 hover:bg-red-800 rounded-full flex items-center"
             name="delete"
-            /*            
- */
+            /*
+             */
             onClick={() => showDeleteModal(record.id)}
             danger
             icon={<DeleteFilled />}
@@ -248,7 +243,7 @@ font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center 
         </h1>
       </Modal>
 
-      <Card className="mt-6 text-center" title="list of Departments">
+      <Card className="mt-6 text-center" title="List of Departments">
         <div className="text-left">
           <Button
             type="primary"
@@ -259,7 +254,7 @@ font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center 
             New department
           </Button>
         </div>
-        <Spin tip="Loading..." size="large" spinning={loadingData} style={{ color: 'red' }}>
+        <Spin tip="Loading..." size="large" spinning={fetchDataLoading} style={{ color: 'red' }}>
           <div>
             <Table
               className="mt-12"
@@ -290,7 +285,6 @@ font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center 
           visibilityToggler={(visible: boolean) => {
             setisDepartment_Under_ManagementModalVisble(visible)
           }}
-          
         />
       )}
     </>

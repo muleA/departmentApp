@@ -9,8 +9,8 @@ import {
 } from '../Actions/department.action'
 import { api } from '../../API/api'
 
-const initialState: { departments: Department[] } = { departments: []}
-
+const initialState: { departments: Department[] } = { departments: []}   // initial value of department state;
+console.log(initialState);
 export default function departmentReducer(state = initialState, action: Action) {
   switch (action.type) {
     case actionType.addDepartment:
@@ -47,6 +47,7 @@ export default function departmentReducer(state = initialState, action: Action) 
 export async function getDepartment(dispatch: Dispatch<any>) {
   try {
     const response = await api.getDepartment()
+    console.log(response.data.items);
     dispatch(addDepartment(response.data.items))
   } catch (err) {
     console.log(err)
