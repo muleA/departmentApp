@@ -186,7 +186,7 @@ export default function DepartmentModal(props: {
             <>
               <Button
                 className="mr-10 text-white bg-blue-700 hover:bg-blue-600  
-  font-medium rounded-lg text-sm "
+                    font-medium rounded-lg text-sm "
                 type="primary"
                 htmlType="submit"
                 loading={submitLoading}
